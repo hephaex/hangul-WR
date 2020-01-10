@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alt4 = (Button) findViewById(R.id.alt4);
         alt4.setOnClickListener(this);
 
-        translationText = (TextView) findViewById(R.id.translationText);
+	/*        translationText = (TextView) findViewById(R.id.translationText); */
         resultText = (EditText) findViewById(R.id.editText);
 
         loadModel();
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         paintView.reset();
         paintView.invalidate();
         resultText.setText("");
-        translationText.setText("");
+	/*        translationText.setText(""); */
         altLayout.setVisibility(View.INVISIBLE);
     }
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Perform the translation using the current Korean text in the text input field.
      */
-    private void translate() {
+    /*    private void translate() {
         String text = resultText.getText().toString();
         if (text.isEmpty()) {
             return;
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HangulTranslator translator = new HangulTranslator(postData, translationText, apikey, url);
         translator.execute();
     }
-
+    */
     /**
      * This function will switch out the last classified character with the alternative given the
      * index in the top labels array.
