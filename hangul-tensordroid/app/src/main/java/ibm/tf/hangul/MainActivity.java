@@ -96,10 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonSpace:
                 space();
                 break;
-            case R.id.buttonSubmit:
-                altLayout.setVisibility(View.INVISIBLE);
-                translate();
-                break;
             case R.id.alt1:
             case R.id.alt2:
             case R.id.alt3:
@@ -133,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         paintView.reset();
         paintView.invalidate();
         resultText.setText("");
-	/*        translationText.setText(""); */
         altLayout.setVisibility(View.INVISIBLE);
     }
 
@@ -151,25 +146,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alt4.setText(currentTopLabels[4]);
     }
 
-    /**
-     * Perform the translation using the current Korean text in the text input field.
-     */
-    /*    private void translate() {
-        String text = resultText.getText().toString();
-        if (text.isEmpty()) {
-            return;
-        }
-
-        HashMap<String, String> postData = new HashMap<>();
-        postData.put("text", text);
-        postData.put("source", "ko");
-        postData.put("target", "en");
-        String apikey = getResources().getString(R.string.apikey);
-        String url = getResources().getString(R.string.url);
-        HangulTranslator translator = new HangulTranslator(postData, translationText, apikey, url);
-        translator.execute();
-    }
-    */
     /**
      * This function will switch out the last classified character with the alternative given the
      * index in the top labels array.
