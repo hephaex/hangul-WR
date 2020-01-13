@@ -6,11 +6,16 @@
 
 ![Demo App](doc/source/images/hangul_tensordroid_demo1.gif "Android app그러고 나서lication")
 
-다음과 같은 단계가 다루어집니다:
-1. 온라인에서 얻은 한글 지원 글꼴을 이용하여 이미지 데이터를 생성하고 탄성 변형을 진행합니다.
-2. 입력과 모델 훈련에 사용되도록 이미지를 TFRecord 형식으로 변환합니다.
-3. 모델을 훈련하고 저장합니다.
-4. Android 앱에 저장된 모델을 사용합니다.
+한글을 추측하는 과정은 다음 순서처럼 진행합니다.
+1. 온라인에서 얻은 한글 지원 글꼴을 이용하여 이미지 데이터를 생성합니다.
+2. 입력과 모델 훈련에 사용되도록 이미지를 텐서플로우의 이미지 형식인 TFRecord 형식으로 변환합니다.
+3. 텐서플로우를 이용하여 모델을 훈련하고 저장합니다.
+4. 학습한 모델을 텐서플로우 .pb 형식을 이용하여 기본 이미지 폴더에 있는 글자가 맞게 추측하는 지 평가합니다. 
+
+한글 손글씨 인식 모바일 앱으로 확장하기 (옵션 과정) 
+1. [소스 코드 저장소](https://github.com/hephaex/hangul-WR) 를 안드로이드 스튜디오가 깔린 컴퓨터로 다운 받습니다. 
+2. 텐서플로우로 학습한 한글 손글씨 인식 모델을 안드로이드 스튜디오가 있는 컴퓨터로 다운 받습니다. 
+3. 안드로이드어 모바일 한글 손글씨 인식 앱을 만듭니다. (Option)
 
 ## 순서
 
@@ -46,6 +51,8 @@
 pip install -r requirements.txt
 ```
 
+Backend.AI 사용자는 미리 생성된 Tensorflow:1.14-py36-cuda9 커널을 사용하면 본 과정은 생략할 수 있습니다. 
+
 ### 2. 이미지 자료 생성하기
 
  인공지능 학습 모델로 좋게 훈련하기 위해서는 일정량의 데이터가 필요합니다.
@@ -53,30 +60,39 @@ pip install -r requirements.txt
 
 이런 이슈를 해결하는 방법으로 프로그램으로 여러분 스스로 데이터를 생성할 수 있습니다. 한글 글꼴 파일을 온라인에서 많이 찾을 수 있는다는 장점을 활용합니다. 그러므로, 이제부터 이에 대해 진행합니다.
 
+#### 한글 이미지 생성하는 스크립트에 대하여 
 이 저장소의 tools 디렉토리에는 [hangul-image-generator.py](./tools/hangul-image-generator.py)가 있습니다.
-이 스크립트는 라벨 파일로 주어지는 각각의 문자에 대한 이미지를 생성하기 위해 fonts 디렉토리에 있는 글꼴들을 사용합니다. 기본 라벨 파일은 [2350-common-hangul.txt](./labels/2350-common-hangul.txt)로 [KS X 1001 encoding](https://en.wikipedia.org/wiki/KS_X_1001)에서 가지고 온 주요 사용 글자 2350자를 포함하고 있습니다. 다른 라벨 파일들은 [256-common-hangul.txt](./labels/256-common-hangul.txt) 와
-[512-common-hangul.txt](./labels/512-common-hangul.txt)이 있습니다.
-이 파일들은 국립국어원에 의해 편집된 기본 어휘 6000단어 목록([여기](https://www.topikguide.com/download/6000_korean_words.htm))에서 가져왔습니다.
-훈련용 컴퓨터 머신이 고성능이 아닌 경우, 좀 더 적은양의 라벨 세트를 사용하는 것이 나중에 전체 모델의 훈련 시간을 줄이는 데 도움이 될 수 있습니다.
+혹은 jupyter notebook을 열고 [hangul-image-generator.ipynb](https://github.com/hephaex/hangul-WR/blob/master/1_generate_hangul_images.ipynb) 를 열어서 실행합니다. 
 
-[fonts](./fonts) 폴더는 현재는 비어있는데, 한글 데이터 세트를 생성하기 전에 fonts 디렉토리에 있는 [README](./fonts/README-ko.md)에 설명해 놓은 글꼴 파일을 반드시 먼저 다운로드 해 놓아야 합니다.
-제가 사용한 데이터 세트는 대략 40가지의 글꼴 파일을 사용하였지만 여러분의 데이터 세트를 더 좋게 만들고 싶다면 더 많은 파일을 사용할 수 있습니다. 특히 몇몇 독특한 스타일을 갖고 있다면 더욱 그렇습니다.
+* 이 스크립트는 라벨 파일로 주어지는 각각의 문자에 대한 이미지를 생성하기 위해 fonts 디렉토리에 있는 글꼴들을 사용합니다. 
+* 기본 라벨 파일은 [2350-common-hangul.txt](./labels/2350-common-hangul.txt)로 [KS X 1001 encoding](https://en.wikipedia.org/wiki/KS_X_1001)에서 가지고 온 주요 사용 글자 2350자를 사용합니다.
+* 다른 라벨 파일들은 [256-common-hangul.txt](./labels/256-common-hangul.txt) 와 [512-common-hangul.txt](./labels/512-common-hangul.txt)이 있습니다.
+* 이 파일들은 국립국어원에 의해 편집된 기본 어휘 6000단어 목록([여기](https://www.topikguide.com/download/6000_korean_words.htm))에서 가져왔습니다. 학습용 컴퓨터 머신이 고성능이 아닌 경우, 좀 더 적은양의 라벨 세트를 사용하면 전체 모델의 훈련 시간을 줄이는 데 도움이 될 수 있습니다.
+
+#### 한글 이미지 데이터를 클라우드에 업로드하기 
+ [fonts](./fonts) 폴더는 현재는 비어 있습니다. 한글 이미지 데이터 세트를 생성하기에 앞서서 fonts 디렉토리에 있는 [README](./fonts/README-ko.md)에 설명을 읽으세요. 
+ .ttf 형식의 한글 글꼴 파일을 여러분의 컴퓨터에 다운 받아서 Backend.AI 의 storage에 해당 폴더를 열고 클라우드 저장소로 업로드 합니다. 
+
+#### 한글 이미지 데이터를 이미지 데이터로 변환하기 
+ 한글 폰트 데이터 세트는 대략 많으면 많을 수록 학습 효과는 더 좋을 수 있지만 학습 데이터가 많으면 많은 만큼 학습을 하는 시간 또한 길어집니다. 6개의 글꼴 파일을 사용하였지만 여러분의 데이터 세트를 더 좋게 만들고 싶다면 더 많은 파일을 사용할 수 있습니다. 특히 몇몇 독특한 스타일을 갖고 있다면 더욱 그렇습니다.
 fonts 디렉토리가 채워지면, [hangul-image-generator.py](./tools/hangul-image-generator.py)로 실제 이미지 생성 단계를 진행할 수 있습니다.
 
+#### cli(command line interface) 에서 변환하기 
 이를 위한 선택 사항은 다음과 같습니다:
 
-* `--label-file`: 다른 라벨 파일을 지정합니다. (보통 글자 수가 적은 것).
-  기본 값은 _./labels/2350-common-hangul.txt_ 입니다.
-* `--font-dir`: 다른 글꼴 디렉토리를 지정합니다. 기본 값은 _./fonts_ 입니다.
-* `--output-dir`: 생성되는 이미지가 저장되는 디렉토리를 지정합니다.
-  기본 값은 _./image-data_ 입니다.
-
-이제 이를 실행하여, 골라 놓은 라벨 파일을 지정합니다:
+* `--label-file`: 기본 값은 _./labels/2350-common-hangul.txt_ 입니다. 다른 라벨 파일을 지정합니다. (보통 글자 수가 적은 것).
+* `--font-dir`: 기본 값은 _./fonts_ 입니다. 다른 글꼴 디렉토리를 지정 합니다. 
+* `--output-dir`: 기본 값은 _./image-data_ 입니다. 생성되는 이미지가 저장되는 디렉토리를 지정합니다.
+  
+이제 이를 >_를 실행하여, 골라 놓은 라벨 파일을 지정합니다:
 
 ```
 python ./tools/hangul-image-generator.py --label-file <your label file path>
 ```
+#### Jupyter notebook 에서 변환하기 
+Backend.AI 앱을 열고 Jupyter notebook 을 실행하여 1_generate_hangul_images.ipynb 에서 각 단계를 실행하면 한글 글꼴 이미지 데이터 셋을 생성할 수 있습니다. 
 
+#### 글꼴 데이터 셋으로 부터 변형된 데이터 셋으로 바꾸어 데이터 가용성 높이기 
 얼마나 많은 라벨과 글꼴이 있는지에 따라 이 스크립트를 완료하기까지 걸리는 시간이 달라집니다. 데이터 세트 보강을 위해, 세 가지의 임의 탄성 변형이 각 생성된 문자 이미지에 대해 수행됩니다. 이미지 예제는 아래와 같이 보여지며, 제일 먼저 보여지는 것이 원본 문자이며, 그 다음이 변형된 글자들입니다.
 
 ![Normal Image](doc/source/images/hangul_normal.jpeg "Normal font character image")
