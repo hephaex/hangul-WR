@@ -46,12 +46,11 @@
 ### 1. 사전 준비 사항 설치하기
 
 여러분의 시스템에 이 과정을 위한 python 요구사항이 설치되어 있어 합니다. 저장소의 최상위 디렉토리에서 다음을 실행하십시오:
+Backend.AI 사용자는 미리 생성된 Tensorflow:1.14-py36-cuda9 커널을 사용하면 본 과정은 생략할 수 있습니다. 
 
 ```
 pip install -r requirements.txt
 ```
-
-Backend.AI 사용자는 미리 생성된 Tensorflow:1.14-py36-cuda9 커널을 사용하면 본 과정은 생략할 수 있습니다. 
 
 ### 2. 이미지 자료 생성하기
 
@@ -89,6 +88,7 @@ fonts 디렉토리가 채워지면, [hangul-image-generator.py](./tools/hangul-i
 ```
 python ./tools/hangul-image-generator.py --label-file <your label file path>
 ```
+
 #### Jupyter notebook 에서 변환하기 
 Backend.AI 앱을 열고 Jupyter notebook 을 실행하여 1_generate_hangul_images.ipynb 에서 각 단계를 실행하면 한글 글꼴 이미지 데이터 셋을 생성할 수 있습니다. 
 
@@ -164,7 +164,7 @@ python ./hangul_model.py --label-file <your label file path> --num-train-steps <
 이미지를 얼마나 많이 가지고 있는지에 따라, 훈련에 걸리는 시간이 길어집니다 (몇 시간에서 하루가 걸리기도 합니다). 특히 랩톱 컴퓨터의 경우에 더 그렇습니다.
 GPU에 접근할 수 있는 경우 속도 향상에 도움이 됩니다. 그 경우에는 GPU가 지원되는 TensorFlow 버젼을 설치해야 합니다. ([Ubuntu](https://www.tensorflow.org/install/install_linux)와[Windows](https://www.tensorflow.org/install/install_windows)만 지원 가능합니다).
 
-Nvidia GTX 1080 그래픽카드를 가진 데크크톱 컴퓨터에서 320,000 개의 이미지를 스크립트 기본 값으로 훈련하는데 대략 2시간 정도가 소요되었습니다.
+Nvidia GTX 1080 그래픽카드를 가진 컴퓨터에서 320,000 개의 이미지를 스크립트 기본 값으로 훈련하는데 대략 2시간 정도가 소요되었습니다.
 
 한 가지 대안으로 연산 복잡도를 상당량 낮출 수 있는 라벨 세트(예를 들어 256자 vs 2350자)를 사용하는 방법이 있습니다.
 스크립트가 실행됨에 따라, 훈련 정확도가 1.0을 향해 증가하는 것과 훈련을 마쳤을 때 예상되는 검사 정확도가 출력되는 것을 볼 수 있습니다. 스크립트가 완료되면 모델이 만들어져 내보내어진 것을 볼 수 있습니다. 기본적으로  `./saved-model/optimized_hangul_tensorflow.pb` 파일에 저장됩니다. 이것은 [프로토콜 버퍼](https://en.wikipedia.org/wiki/Protocol_Buffers) 파일로서  훈련된 모든 가중치와 편향치를 가지고 있는 모델의 직렬화된 버젼을 나타냅니다. 이 특정한 형식은 추론 전용 용도에 최적화되어 있습니다.
