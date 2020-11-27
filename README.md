@@ -149,11 +149,7 @@ test1.tfrecords    train1.tfrecords    train2.tfrecords    train3.tfrecords
 * `--tfrecords-dir` TFRecords 샤드를 담게되는 디렉토리를 지정합니다.
   기본 값은 _./tfrecords-output_ 입니다.
 * `--output-dir` 모델 checkpoint, graph 그리고 프로토콜 버퍼 파일 저장을 위한 디렉토리를 지정합니다. 기본 값은 _./saved-model_ 입니다.
-* `--num-train-steps` 수행할 훈련 단계의 갯수를 지정합니다.
-  이는 데이터가 많아질 수록 증가해야 합니다(반대의 경우도 마찬가지). 단계의 갯수는 전체 훈련 데이터 (세대, epoch)에 걸쳐 몇 번정도 반복 될 수 있도록 해야 합니다.
-  예를 들어 훈련용 세트에 320,000 개의 이미지를 가지고 있는 경우라면 하나의 세대(epoch)는 기본 일괄처리 데이터 크기인 _100_ 을 기준으로 _320000/100 = 3200_ 단계가 됩니다. 그러므로, 만약 30세대 정도 훈련한다면, 단순하게 _3200*30 = 96000_ 의 훈련 단계를 수행하면 됩니다.
-  적어도 15세대만큼은 실행될 수 있도록 이 옵션 값을 확실하게 조절하십시오.
-  기본 값은 _30000_ 단계입니다.
+* `--num-train-epochs` 교육할 epoch 수를 지정하는 데 사용됩니다. 이는 교육 데이터 세트를 통과하는 전체 합격 횟수입니다. 데이터 세트에서 모델 성능을 향상시키려면 반드시 이 매개 변수를 조정해야 합니다. 기본값은 15개입니다.
 
 이 훈련을 실행하려면, 이 프로젝트의 최상위 디렉토리에서 다음과 같이 실행하십시오:
 
@@ -206,7 +202,6 @@ python ./tools/classify-hangul.py <Image Path> --label-file <your label file pat
 여러분 스스로 앱을 사용해보는 가장 쉬운 방법은 [Android Studio](https://developer.android.com/studio/index.html)를 사용하는 것입니다. 이는 IDE내에서 수 많은 Android 의존 정보를 처리합니다.
 
 Android Studio를 다운로드하고 설치한 후 다음 단계를 수행하십시오:
-
 1) Android Studio를 실행합니다
 2) **Welcome to Android Studio** 윈도가 나타나면, 여기에서
   **Open an existing Android Studio project**를 선택합니다. 이 윈도가 나타나지 않는다면, 상단 메뉴에서 **File > Open...** 을 선택합니다.
@@ -232,6 +227,14 @@ java 폴더는 앱을 위한 모든 java 소스 코드를 담고 있습니다. �
 현재 상태의 Android 앱은 _2350-common-hangul.txt_ 라벨 파일을 사용하며 40개의 글꼴에서 얻어진 320,000 개의 이미지를 사용하여 훈련된 모델을 포함하고 있습니다. 이는 프로젝트의 _assets_ 폴더(_./hangul-tensordroid/app/src/main/assets/_)에 저장되어 있습니다.
 만약 모델이나 라벨 파일을 바꾸는 경우라면 단순히 이 디렉토리에 가져다 놓으면 됩니다.
 그리고, [MainActivity.java](./hangul-tensordroid/app/src/main/java/ibm/tf/hangul/MainActivity.java)(_./hangul-tensordroid/app/src/main/java/ibm/tf/hangul/MainActivity.java_) 파일의 윗쪽에 있는 `LABEL_FILE` 와 `MODEL_FILE` 상수에 해당 파일에 대한 이름을 지정해 주어야 합니다.
+
+만약 번역 기능을 사용하려면 다음과 같이 해야 합니다:
+
+1) [여기](https://cloud.ibm.com/registration/)에서 IBM Cloud 계정을 생성합니다.
+2) [Watson Language Translator](https://cloud.ibm.com/catalog/services/language-translator) 서비스를 생성합니다.
+3) Translator 서비스의 신임 정보를 얻습니다. 신임 정보는 자동으로 생성됩니다. 이 정보는 IBM Cloud 대시보드의 **서비스** 영역 아래 있는 **Language Translator** 서비스를 클릭해서 얻을 수 있습니다.
+4) _[./hangul-tensordroid/app/src/main/res/values/translate_api.xml](./hangul-tensordroid/app/src/main/res/values/translate_api.xml)_
+   의 **username** 과 **password** 값을 3단계에서 얻은 값으로 변경합니다.
 
 #### 앱 실행하기
 
