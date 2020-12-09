@@ -5,7 +5,6 @@ import shutil
 import tempfile
 import unittest
 
-
 TEST_PATH = os.path.dirname(os.path.abspath(__file__))
 SCRIPT_PATH = os.path.join(TEST_PATH, '../tools/hangul-image-generator.py')
 generator = imp.load_source('hangul-image-generator', SCRIPT_PATH)
