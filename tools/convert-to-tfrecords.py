@@ -15,24 +15,19 @@ SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Default data paths.
 DEFAULT_LABEL_CSV = os.path.join(SCRIPT_PATH, '../image-data/labels-map.csv')
-DEFAULT_LABEL_FILE = os.path.join(SCRIPT_PATH,
-                                  '../labels/2350-common-hangul.txt')
+DEFAULT_LABEL_FILE = os.path.join(SCRIPT_PATH, '../labels/2350-common-hangul.txt')
 DEFAULT_OUTPUT_DIR = os.path.join(SCRIPT_PATH, '../tfrecords-output')
 DEFAULT_NUM_SHARDS_TRAIN = 3
 DEFAULT_NUM_SHARDS_TEST = 1
 
-
 def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
-
 
 def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
-
 class TFRecordsConverter(object):
     """Class that handles converting images to TFRecords."""
-
     def __init__(self, labels_csv, label_file, output_dir,
                  num_shards_train, num_shards_test):
 
