@@ -5,7 +5,6 @@ import glob
 import io
 import os
 import random
-
 import numpy
 from PIL import Image, ImageFont, ImageDraw
 from scipy.ndimage.interpolation import map_coordinates
