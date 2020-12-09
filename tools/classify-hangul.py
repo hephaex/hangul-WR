@@ -4,7 +4,6 @@ import argparse
 import io
 import os
 import sys
-
 import tensorflow as tf
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +16,6 @@ DEFAULT_GRAPH_FILE = os.path.join(
     SCRIPT_PATH, '../saved-model/optimized_hangul_tensorflow.pb'
 )
 
-
 def read_image(file):
     """Read an image file and convert it into a 1-D floating point array."""
     file_content = tf.read_file(file)
@@ -26,7 +24,6 @@ def read_image(file):
     image = tf.reshape(image, (1, 64*64))
     return image
 
-
 def classify(args):
     """Classify a character.
 
@@ -34,8 +31,7 @@ def classify(args):
     pass in the given image pixels as input for the classification. The top
     five predictions will be printed.
     """
-    labels = io.open(args.label_file,
-                     'r', encoding='utf-8').read().splitlines()
+    labels = io.open(args.label_file, 'r', encoding='utf-8').read().splitlines()
 
     if not os.path.isfile(args.image):
         print('Error: Image %s not found.' % args.image)
